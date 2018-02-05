@@ -62,6 +62,14 @@
             <i class="fa fa-list-alt"></i>Supplements
           </tab-heading>
         </tab>
+
+        <tab active="tabs[6]"
+             ng-show="testCase['report'] && testCase['report'] !== null && testCase['report']['html'] !== null"
+             ng-click="tabs[6] = true;">
+          <tab-heading>
+            <i class="fa fa-file-text-o"></i>Saved Report
+          </tab-heading>
+        </tab>
       </tabset>
 
       <div ng-show="tabs[1] && testCase['testDataSpecification']  && testCase['testDataSpecification'] !== null">
@@ -78,6 +86,30 @@
       <div
         ng-show="tabs[5] && testCase['supplements'] && testCase['supplements'] !== null && testCase['supplements'].length > 0">
         <div supplement-documents target="{{target}}"></div>
+      </div>
+
+      <div ng-show="tabs[6] && testCase['report'] && testCase['report'] !== null && testCase['report']['html'] !== null" style="margin-top:20px">
+        <div class="alert alert-info" ng-show="testCase.report.versionChanged">
+          <strong>Info!</strong> This test case has been updated since the report was saved.
+        </div>
+        <div class="btn-group">
+          <button type="button"
+                  class="btn btn-info btn-xs"><span><i
+                  class="fa fa-download fa-fw"></i>Download</span>
+          </button>
+          <button type="button"
+                  class="btn btn-info btn-xs dropdown-toggle"
+                  data-toggle="dropdown" aria-expanded="false">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+          </button>
+          <ul class="dropdown-menu base-menu" role="menu">
+            <li><a class="point" ng-click="exportTestCaseReportAs('pdf')">As PDF</a></li>
+            <li><a class="point" ng-click="exportAs('html')">As HTML</a></li>
+            <li><a class="point" ng-click="exportAs('xml')">As XML</a></li>
+          </ul>
+        </div>
+        <div ng-bind-html="testCase.report.html" style="margin-top:10px"></div>
       </div>
 
     </div>

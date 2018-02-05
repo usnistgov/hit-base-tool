@@ -4,7 +4,7 @@
 
 (function (angular) {
     'use strict';
-    var mod = angular.module('hit-testcase-details', []);
+    var mod = angular.module('hit-testcase-details', ['hit-report-viewer']);
 
     mod.directive('testcaseDetails', [
         function () {
@@ -317,7 +317,7 @@
 
 
     mod
-        .controller('TestCaseDetailsCtrl', ['$scope', '$rootScope', '$sce', 'TestCaseDetailsService', '$compile', '$timeout', '$modal', function ($scope, $rootScope, $sce, TestCaseDetailsService, $compile, $timeout, $modal) {
+        .controller('TestCaseDetailsCtrl', ['$scope', '$rootScope', '$sce', 'TestCaseDetailsService', '$compile', '$timeout', '$modal', 'ReportService','userInfoService', function ($scope, $rootScope, $sce, TestCaseDetailsService, $compile, $timeout, $modal,ReportService,userInfoService) {
             $scope.tabs = [];
             $scope.loading = false;
             $scope.editor = null;
@@ -330,6 +330,7 @@
                 $scope.tabs[3] = false;
                 $scope.tabs[4] = false;
                 $scope.tabs[5] = false;
+                $scope.tabs[6] = false;
                 $scope.testCase = testCase;
                 $scope.loading = true;
                 $scope.error = null;
@@ -344,6 +345,22 @@
                         $scope.$broadcast(exampleMsgId, exampleMessage, testContext.format, testCase.name);
                     }
                 }
+
+                if(testCase.type.toLowerCase()==="testcase"&&userInfoService.isAuthenticated()){
+                    ReportService.getPersistentReport(testCase.id).then(
+                        function(report){
+                            if(report.data.html!==undefined){
+                                $scope.testCase['report'] = report.data;
+                            } else {
+                                $scope.testCase['report'] = undefined;
+                            }
+                        },
+                        function(object){
+                            console.log("No report for this testcase");
+                        }
+                    );
+                }
+
                 TestCaseDetailsService.details(testCase.type, testCase.id).then(function (result) {
                     $scope.testCase['testStory'] = result['testStory'];
                     $scope.testCase['jurorDocument'] = result['jurorDocument'];

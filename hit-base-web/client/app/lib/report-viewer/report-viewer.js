@@ -197,6 +197,33 @@
       form.submit();
     };
 
+    ReportService.savePersistentReport = function (currentTestCaseId,validationResult,validationComments){
+        var delay = $q.defer();
+        $http.post("api/testCaseValidationReport/savePersistentUserTestCaseReport", {testCaseId:currentTestCaseId,result:validationResult,comments:validationComments}).then(
+            function () {
+                delay.resolve();
+            },
+            function (response) {
+                console.log("Failed to save the persistent report: "+response);
+                delay.reject(response.data);
+            }
+        );
+        return delay.promise;
+    };
+
+    ReportService.getPersistentReport = function (currentTestCaseId){
+        var delay = $q.defer();
+        $http.get("api/testCaseValidationReport/getPersistentUserTestCaseReportContent", {params: {testCaseId:currentTestCaseId}}).then(
+            function (html) {
+                delay.resolve(html);
+            },
+            function (response) {
+                console.log("Failed to get the persistent report: "+response);
+                delay.reject(response.data);
+            }
+        );
+        return delay.promise;
+    };
 
     ReportService.downloadTestCaseReports = function (testCaseId, format, result, comments) {
       var form = document.createElement("form");

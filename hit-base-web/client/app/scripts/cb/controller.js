@@ -33,7 +33,7 @@ angular.module('cb')
 
 
 angular.module('cb')
-  .controller('CBExecutionCtrl', ['$scope', '$window', '$rootScope', 'CB', '$modal', 'TestExecutionClock', 'Endpoint', 'TestExecutionService', '$timeout', 'StorageService', 'User', 'ReportService', 'TestCaseDetailsService', '$compile', 'Transport', '$filter', function ($scope, $window, $rootScope, CB, $modal, TestExecutionClock, Endpoint, TestExecutionService, $timeout, StorageService, User, ReportService, TestCaseDetailsService, $compile, Transport, $filter) {
+  .controller('CBExecutionCtrl', ['$scope', '$window', '$rootScope', 'CB', '$modal', 'TestExecutionClock', 'Endpoint', 'TestExecutionService', '$timeout', 'StorageService', 'User', 'ReportService', 'TestCaseDetailsService', '$compile', 'Transport', '$filter', 'userInfoService', 'Notification', function ($scope, $window, $rootScope, CB, $modal, TestExecutionClock, Endpoint, TestExecutionService, $timeout, StorageService, User, ReportService, TestCaseDetailsService, $compile, Transport, $filter, userInfoService, Notification) {
     $scope.targ = "cb-executed-test-step";
     $scope.loading = false;
     $scope.error = null;
@@ -626,6 +626,37 @@ angular.module('cb')
         var result = TestExecutionService.getTestStepValidationReport(testStep);
         $rootScope.$emit(reportType + ':updateTestStepValidationReport', result && result != null ? result.reportId : null, testStep);
       }
+    };
+
+    $scope.persistentReportSaved=false;
+
+    $scope.isAuthenticated = function(){
+        return userInfoService.isAuthenticated();
+    }
+
+    $scope.savePersistentReport = function () {
+        if ($scope.testCase != null) {
+            var result = TestExecutionService.getTestCaseValidationResult($scope.testCase);
+            result = result != undefined ? result : null;
+            var comments = TestExecutionService.getTestCaseComments($scope.testCase);
+            comments = comments != undefined ? comments : null;
+            //$scope.testCase.id
+            ReportService.savePersistentReport($scope.testCase.id, result, comments).then(
+                function(){
+                    $scope.persistentReportSaved=true;
+                    Notification.success({
+                                message: "Test case report saved",
+                                templateUrl: 'NotificationSuccessTemplate.html',
+                                scope: $rootScope,
+                                delay: 10000
+                              });
+                },
+                function(){
+                    console.log("Unable to save the report.");
+                    Notification.error({message: "Failed to save the test case report. Please try again", templateUrl: "NotificationErrorTemplate.html", scope: $rootScope, delay: 30000});
+                }
+            );
+        }
     };
 
     $scope.abortListening = function () {
