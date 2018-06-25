@@ -201,7 +201,8 @@ angular.module('account').directive('stDateRange', ['$timeout', function ($timeo
         });
       });
     }
-  };
+  }
+
 }]).filter('customFilter', ['$filter', function ($filter) {
   var filterFilter = $filter('filter');
   var standardComparator = function standardComparator(obj, text) {

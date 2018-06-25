@@ -8,6 +8,7 @@ angular.module('cb', ['common']);
 angular.module('hit-tool-directives', []);
 angular.module('hit-tool-services', ['common']);
 angular.module('documentation', []);
+angular.module('logs', ['common']);
 var app = angular.module('hit-app', [
     'ngRoute',
     'ui.bootstrap',
@@ -53,7 +54,8 @@ var app = angular.module('hit-app', [
   'ui.tree',
   'ui.select',
   'hit-edit-testcase-details',
-  'angularFileUpload'
+  'angularFileUpload',
+  'logs'
 
 ]);
 
@@ -132,6 +134,9 @@ app.config(function ($routeProvider, $httpProvider, localStorageServiceProvider,
       .when('/addprofiles', {
         redirectTo: '/cf'
       })
+      .when('/logs', {
+        templateUrl: 'views/logs/logs.html'
+       })
         .otherwise({
             redirectTo: '/'
         });

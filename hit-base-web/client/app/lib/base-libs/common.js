@@ -1549,8 +1549,25 @@ angular.module('format').factory('Transport', function ($q, $http, StorageServic
 //                    }
 //                );
         return delay.promise;
+      },
+
+      saveTransportLog : function (testStepId, content,domain, protocol) {
+        var delay = $q.defer();
+        var self = this;
+        var data = angular.fromJson({"testStepId": testStepId, "content": content,"domain":domain,"protocol":protocol});
+        $http.post('api/logs/transport', data).then(
+          function (response) {
+            delay.resolve(angular.fromJson(response.data));
+          },
+          function (response) {
+            delay.reject(null);
+          }
+        );
+        return delay.promise;
       }
-    };
+
+
+  };
 
     return Transport;
   }
@@ -1610,6 +1627,11 @@ angular.module('format')
       $scope.transport.disabled = disabled;
       StorageService.set(StorageService.TRANSPORT_DISABLED, disabled);
     };
+
+
+
+
+
 
 
   }]);
