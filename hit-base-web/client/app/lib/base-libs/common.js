@@ -1553,11 +1553,10 @@ angular.module('format').factory('Transport', function ($q, $http, StorageServic
 
       saveTransportLog : function (testStepId, content,domain, protocol) {
         var delay = $q.defer();
-        var self = this;
         var data = angular.fromJson({"testStepId": testStepId, "content": content,"domain":domain,"protocol":protocol});
         $http.post('api/logs/transport', data).then(
           function (response) {
-            delay.resolve(angular.fromJson(response.data));
+            delay.resolve(response.data);
           },
           function (response) {
             delay.reject(null);
