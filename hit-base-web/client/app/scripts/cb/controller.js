@@ -1116,6 +1116,7 @@ angular.module('cb')
           testCaseService.buildTree(testPlan);
           $scope.refreshTree();
           StorageService.set(StorageService.CB_SELECTED_TESTPLAN_ID_KEY, $scope.selectedTP.id);
+          $scope.selectTestCase(testPlan);
           $scope.loadingTP = false;
         }, function (error) {
           $scope.loadingTP = false;
@@ -1950,8 +1951,7 @@ angular.module('cb')
 
 
 
-    $scope.initTestCase = function () {
-      console.log("coocu");
+    $scope.initTestCase = function () {      
       if ($rootScope.isCbManagementSupported() && userInfoService.isAuthenticated() && $rootScope.hasWriteAccess()) {
         $scope.error = null;
         $scope.loading = true;
@@ -1997,6 +1997,7 @@ angular.module('cb')
           $scope.testCases = [testPlan];
           testCaseService.buildTree(testPlan);
           StorageService.set(StorageService.CB_MANAGE_SELECTED_TESTPLAN_ID_KEY, $scope.selectedTP.id);
+          $scope.selectTestNode(testPlan);
           $scope.loadingTP = false;
         }, function (error) {
           $scope.loadingTP = false;
